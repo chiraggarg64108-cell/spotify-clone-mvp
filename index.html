@@ -63,29 +63,27 @@
                     <div class="col-span-1 text-right"><i class="fa-regular fa-clock"></i></div>
                 </div>
 
-                <!-- 2 Dummy Songs -->
-                <div class="space-y-2">
-                    <!-- Song 1 -->
-                    <div class="grid grid-cols-12 items-center px-4 py-3 rounded-md hover:bg-gray-800/70 transition group cursor-pointer" onclick="selectSong('Blinding Lights', 'The Weeknd')">
+                <!-- Parent Container for Event Delegation -->
+                <div id="song-list" class="space-y-2">
+                    <!-- Hardcoded fallback songs (cleared once API loads) -->
+                    <div data-index="0" class="song-row grid grid-cols-12 items-center px-4 py-3 rounded-md hover:bg-gray-800/70 transition group cursor-pointer">
                         <div class="col-span-1 text-gray-400 group-hover:text-green-500 font-medium">1</div>
                         <div class="col-span-6 flex items-center gap-4">
                             <img src="https://placehold.co/48x48/1db954/000000?text=BL" alt="Blinding Lights Cover" class="w-12 h-12 rounded object-cover">
                             <div>
-                                <p class="font-semibold text-white group-hover:text-green-400 transition">Blinding Lights</p>
-                                <span class="text-xs bg-gray-700 text-gray-300 px-1.5 py-0.5 rounded">E</span>
+                                <p class="song-title font-semibold text-white group-hover:text-green-400 transition">Blinding Lights</p>
                             </div>
                         </div>
                         <div class="col-span-4 text-gray-400">The Weeknd</div>
                         <div class="col-span-1 text-right text-gray-400 text-sm">3:20</div>
                     </div>
 
-                    <!-- Song 2 -->
-                    <div class="grid grid-cols-12 items-center px-4 py-3 rounded-md hover:bg-gray-800/70 transition group cursor-pointer" onclick="selectSong('Midnight City', 'M83')">
+                    <div data-index="1" class="song-row grid grid-cols-12 items-center px-4 py-3 rounded-md hover:bg-gray-800/70 transition group cursor-pointer">
                         <div class="col-span-1 text-gray-400 group-hover:text-green-500 font-medium">2</div>
                         <div class="col-span-6 flex items-center gap-4">
                             <img src="https://placehold.co/48x48/3b82f6/ffffff?text=MC" alt="Midnight City Cover" class="w-12 h-12 rounded object-cover">
                             <div>
-                                <p class="font-semibold text-white group-hover:text-green-400 transition">Midnight City</p>
+                                <p class="song-title font-semibold text-white group-hover:text-green-400 transition">Midnight City</p>
                             </div>
                         </div>
                         <div class="col-span-4 text-gray-400">M83</div>
@@ -97,14 +95,14 @@
     </div>
 
     <!-- Fixed Bottom Music Player Bar -->
-    <footer class="fixed bottom-0 left-0 right-0 h-24 bg-black border-t border-gray-800 px-6 flex items-center justify-between z-50">
+    <footer id="player-controls" class="fixed bottom-0 left-0 right-0 h-24 bg-black border-t border-gray-800 px-6 flex items-center justify-between z-50">
         
-        <!-- Left: Currently Playing Track Info & Album Cover Placeholder -->
+        <!-- Left: Currently Playing Track Info & Album Cover -->
         <div class="flex items-center gap-4 w-1/4">
-            <img src="https://placehold.co/56x56/1f2937/10b981?text=Album" alt="Album Cover" class="w-14 h-14 rounded-md object-cover border border-gray-800">
+            <img id="current-cover" src="https://placehold.co/56x56/1f2937/10b981?text=Album" alt="Album Cover" class="w-14 h-14 rounded-md object-cover border border-gray-800">
             <div>
-                <h4 id="current-title" class="text-sm font-semibold text-white hover:underline cursor-pointer">Blinding Lights</h4>
-                <p id="current-artist" class="text-xs text-gray-400 hover:underline cursor-pointer">The Weeknd</p>
+                <h4 id="current-title" class="text-sm font-semibold text-white hover:underline cursor-pointer">Select a song</h4>
+                <p id="current-artist" class="text-xs text-gray-400 hover:underline cursor-pointer">—</p>
             </div>
             <button class="text-gray-400 hover:text-green-500 ml-2 transition">
                 <i class="fa-regular fa-heart"></i>
@@ -114,27 +112,27 @@
         <!-- Center: Player Controls & Progress Bar -->
         <div class="flex flex-col items-center w-2/4 max-w-xl">
             <div class="flex items-center gap-6 mb-2">
-                <button class="text-gray-400 hover:text-white transition" title="Previous">
-                    <i class="fa-solid fa-backward-step text-lg"></i>
+                <button id="prev-btn" type="button" class="text-gray-400 hover:text-white transition cursor-pointer" title="Previous">
+                    <i class="fa-solid fa-backward-step text-lg pointer-events-none"></i>
                 </button>
-                <button class="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition" title="Play">
-                    <i class="fa-solid fa-play text-sm ml-0.5"></i>
+                <button id="play-btn" type="button" class="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition cursor-pointer" title="Play">
+                    <i class="fa-solid fa-play text-sm ml-0.5 pointer-events-none"></i>
                 </button>
-                <button class="w-9 h-9 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-gray-700 hover:scale-105 transition" title="Pause">
-                    <i class="fa-solid fa-pause text-sm"></i>
+                <button id="pause-btn" type="button" class="w-9 h-9 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-gray-700 hover:scale-105 transition cursor-pointer" title="Pause">
+                    <i class="fa-solid fa-pause text-sm pointer-events-none"></i>
                 </button>
-                <button class="text-gray-400 hover:text-white transition" title="Next">
-                    <i class="fa-solid fa-forward-step text-lg"></i>
+                <button id="next-btn" type="button" class="text-gray-400 hover:text-white transition cursor-pointer" title="Next">
+                    <i class="fa-solid fa-forward-step text-lg pointer-events-none"></i>
                 </button>
             </div>
 
             <!-- Progress Bar -->
             <div class="w-full flex items-center gap-3 text-xs text-gray-400">
-                <span>1:14</span>
-                <div class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden cursor-pointer group">
-                    <div class="w-1/3 h-full bg-white group-hover:bg-green-500 rounded-full transition-colors"></div>
+                <span id="current-time">0:00</span>
+                <div id="progress-container" class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden cursor-pointer group">
+                    <div id="progress-bar" class="w-0 h-full bg-white group-hover:bg-green-500 rounded-full transition-all"></div>
                 </div>
-                <span>3:20</span>
+                <span id="total-duration">0:00</span>
             </div>
         </div>
 
@@ -148,25 +146,222 @@
     </footer>
 
     <script>
-        function selectSong(title, artist) {
-            document.getElementById('current-title').textContent = title;
-            document.getElementById('current-artist').textContent = artist;
+        const BASE_URL = 'http://localhost:3000';
+        const API_URL = `${BASE_URL}/api/songs`;
+
+        // Single persistent Audio instance
+        const audioPlayer = new Audio();
+        let songsList = [];
+        let currentSongIndex = -1;
+
+        // DOM Elements
+        const songListContainer = document.getElementById('song-list');
+        const currentCover = document.getElementById('current-cover');
+        const currentTitle = document.getElementById('current-title');
+        const currentArtist = document.getElementById('current-artist');
+        const playBtn = document.getElementById('play-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.getElementById('progress-container');
+        const currentTimeEl = document.getElementById('current-time');
+        const totalDurationEl = document.getElementById('total-duration');
+
+        // Helper to resolve relative URLs from backend (e.g., "/audio/song.mp3" -> "http://localhost:3000/audio/song.mp3")
+        function resolveUrl(url, fallback = '') {
+            if (!url) return fallback;
+            if (url.startsWith('http://') || url.startsWith('https://')) return url;
+            return `${BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
         }
+
+        // 1. Fetch songs from API and render them
+        async function loadSongs() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error(`Status: ${response.status}`);
+                }
+                const data = await response.json();
+                songsList = Array.isArray(data) ? data : (data.songs || []);
+                renderSongs(songsList);
+            } catch (error) {
+                console.error('Error loading songs from API:', error);
+            }
+        }
+
+        function renderSongs(songs) {
+            songListContainer.innerHTML = '';
+
+            if (songs.length === 0) {
+                songListContainer.innerHTML = '<p class="text-gray-400 px-4 py-2 text-sm">No songs available.</p>';
+                return;
+            }
+
+            songListContainer.innerHTML = songs.map((song, index) => {
+                const coverSrc = resolveUrl(
+                    song.coverImage || song.cover,
+                    'https://placehold.co/48x48/1db954/000000?text=Song'
+                );
+
+                return `
+                    <div data-index="${index}" class="song-row grid grid-cols-12 items-center px-4 py-3 rounded-md hover:bg-gray-800/70 transition group cursor-pointer">
+                        <div class="col-span-1 text-gray-400 group-hover:text-green-500 font-medium">${index + 1}</div>
+                        <div class="col-span-6 flex items-center gap-4">
+                            <img src="${coverSrc}" alt="${song.title}" class="w-12 h-12 rounded object-cover">
+                            <div>
+                                <p class="song-title font-semibold text-white group-hover:text-green-400 transition">${song.title}</p>
+                            </div>
+                        </div>
+                        <div class="col-span-4 text-gray-400">${song.artist}</div>
+                        <div class="col-span-1 text-right text-gray-400 text-sm">
+                            <i class="fa-solid fa-play text-xs opacity-0 group-hover:opacity-100 text-green-500 transition"></i>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 2. Event Delegation on #song-list for dynamically rendered song rows
+        songListContainer.addEventListener('click', (event) => {
+            const clickedRow = event.target.closest('.song-row');
+            if (!clickedRow) return;
+
+            const songIndex = parseInt(clickedRow.getAttribute('data-index'), 10);
+            if (!isNaN(songIndex)) {
+                playSongAtIndex(songIndex);
+            }
+        });
+
+        // Load and play a specific song using the single audioPlayer instance
+        function playSongAtIndex(index) {
+            if (index < 0 || index >= songsList.length) return;
+
+            const song = songsList[index];
+            currentSongIndex = index;
+
+            const audioSrc = resolveUrl(song.audioUrl || song.url || song.audio);
+            const coverSrc = resolveUrl(
+                song.coverImage || song.cover,
+                'https://placehold.co/56x56/1f2937/10b981?text=Album'
+            );
+
+            // Update Bottom Bar UI immediately on click
+            currentTitle.textContent = song.title || 'Unknown Title';
+            currentArtist.textContent = song.artist || 'Unknown Artist';
+            currentCover.src = coverSrc;
+            highlightActiveRow(index);
+
+            // Point the shared Audio object to the selected track and play
+            audioPlayer.pause();
+            audioPlayer.src = audioSrc;
+            audioPlayer.currentTime = 0;
+
+            audioPlayer.play().catch((err) => {
+                console.error('Playback error for URL:', audioSrc, err);
+                updatePlayPauseButtons(false);
+            });
+        }
+
+        // 3. Bottom Bar Play / Pause / Next / Prev Controls targeting audioPlayer
+        playBtn.addEventListener('click', () => {
+            // If no song has been clicked yet, play the first song in the list
+            if (currentSongIndex === -1 && songsList.length > 0) {
+                playSongAtIndex(0);
+                return;
+            }
+
+            if (audioPlayer.src) {
+                audioPlayer.play().catch((err) => console.error('Play failed:', err));
+            }
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            audioPlayer.pause();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (songsList.length === 0) return;
+            const nextIndex = (currentSongIndex + 1) % songsList.length;
+            playSongAtIndex(nextIndex);
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (songsList.length === 0) return;
+            const prevIndex = (currentSongIndex - 1 + songsList.length) % songsList.length;
+            playSongAtIndex(prevIndex);
+        });
+
+        // Native Audio Event Listeners (attached once to the persistent audioPlayer)
+        audioPlayer.addEventListener('play', () => {
+            updatePlayPauseButtons(true);
+        });
+
+        audioPlayer.addEventListener('pause', () => {
+            updatePlayPauseButtons(false);
+        });
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            if (audioPlayer.duration) {
+                const progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+                currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+            }
+        });
+
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            totalDurationEl.textContent = formatTime(audioPlayer.duration);
+        });
+
+        audioPlayer.addEventListener('ended', () => {
+            updatePlayPauseButtons(false);
+            if (songsList.length > 0) {
+                const nextIndex = (currentSongIndex + 1) % songsList.length;
+                playSongAtIndex(nextIndex);
+            }
+        });
+
+        // Seek when clicking the progress bar
+        progressContainer.addEventListener('click', (event) => {
+            if (!audioPlayer.duration) return;
+            const rect = progressContainer.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            audioPlayer.currentTime = (clickX / rect.width) * audioPlayer.duration;
+        });
+
+        // Visual feedback helpers
+        function updatePlayPauseButtons(isPlaying) {
+            if (isPlaying) {
+                playBtn.classList.replace('bg-white', 'bg-green-500');
+                pauseBtn.classList.replace('bg-green-500', 'bg-gray-800');
+            } else {
+                playBtn.classList.replace('bg-green-500', 'bg-white');
+                pauseBtn.classList.replace('bg-gray-800', 'bg-green-500');
+            }
+        }
+
+        function highlightActiveRow(activeIndex) {
+            document.querySelectorAll('.song-row').forEach((row, idx) => {
+                const titleEl = row.querySelector('.song-title');
+                if (idx === activeIndex) {
+                    row.classList.add('bg-gray-800/90');
+                    if (titleEl) titleEl.classList.replace('text-white', 'text-green-400');
+                } else {
+                    row.classList.remove('bg-gray-800/90');
+                    if (titleEl) titleEl.classList.replace('text-green-400', 'text-white');
+                }
+            });
+        }
+
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', loadSongs);
     </script>
-    <!-- Upar aapka UI aur design ka saara code hoga -->
-      
-      <script>
-        fetch('http://localhost:3000/api/songs')
-          .then(response => response.json())
-          .then(songs => {
-            console.log("Server se gaane aa gaye:", songs);
-            alert("Backend se " + songs.length + " gaane successfully fetch ho gaye!");
-          })
-          .catch(error => {
-            console.error("Backend se connect nahi ho paya", error);
-          });
-      </script>
-  </body>
-</html>
 </body>
 </html>
